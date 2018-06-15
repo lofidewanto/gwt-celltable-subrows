@@ -6,61 +6,56 @@ import com.google.gwt.cell.client.HasCell;
 
 /**
  * HasCell pour une cellule fille permettant d'obtenir les evenements sur cette cellule
- * 
- * @author NICOLASM
+ *
  * @param <P> Type de l'objet parent
  * @param <C> Type de l'objet fils
  * @param <V> Type de la valeur manipul�e par la cellule
+ * @author NICOLASM
  */
-public class ChildCellColumn<P, C, V>
-    implements HasCell<P, V>
-{
-    private int childIndex;
+public class ChildCellColumn<P, C, V> implements HasCell<P, V> {
+	private int childIndex;
 
-    private ChildGetter<P, C> childGetter;
+	private ChildGetter<P, C> childGetter;
 
-    private Cell<V> cell;
+	private Cell<V> cell;
 
-    private ValueGetter<C, V> valueGetter;
+	private ValueGetter<C, V> valueGetter;
 
-    private ChildFieldUpdater<P, C, V> fieldUpdater;
+	private ChildFieldUpdater<P, C, V> fieldUpdater;
 
-    public ChildCellColumn( int childIndex, ChildGetter<P, C> childGetter, Cell<V> cell, ValueGetter<C, V> valueGetter )
-    {
-        this( childIndex, childGetter, cell, valueGetter, null );
-    }
+	public ChildCellColumn(int childIndex, ChildGetter<P, C> childGetter,
+			Cell<V> cell, ValueGetter<C, V> valueGetter) {
+		this(childIndex, childGetter, cell, valueGetter, null);
+	}
 
-    public ChildCellColumn( int childIndex, ChildGetter<P, C> childGetter, Cell<V> cell, ValueGetter<C, V> valueGetter,
-                            FieldUpdater<C, V> fieldUpdater )
-    {
-        this.childIndex = childIndex;
-        this.childGetter = childGetter;
-        this.cell = cell;
-        this.valueGetter = valueGetter;
-        this.fieldUpdater = new ChildFieldUpdater<P, C, V>( childIndex, childGetter, fieldUpdater );
-    }
+	public ChildCellColumn(int childIndex, ChildGetter<P, C> childGetter,
+			Cell<V> cell, ValueGetter<C, V> valueGetter,
+			FieldUpdater<C, V> fieldUpdater) {
+		this.childIndex = childIndex;
+		this.childGetter = childGetter;
+		this.cell = cell;
+		this.valueGetter = valueGetter;
+		this.fieldUpdater = new ChildFieldUpdater<P, C, V>(childIndex,
+				childGetter, fieldUpdater);
+	}
 
-    @Override
-    public Cell<V> getCell()
-    {
-        return cell;
-    }
+	@Override
+	public Cell<V> getCell() {
+		return cell;
+	}
 
-    public ValueGetter<C, V> getValueGetter()
-    {
-        return valueGetter;
-    }
+	public ValueGetter<C, V> getValueGetter() {
+		return valueGetter;
+	}
 
-    @Override
-    public FieldUpdater<P, V> getFieldUpdater()
-    {
-        return fieldUpdater;
-    }
+	@Override
+	public FieldUpdater<P, V> getFieldUpdater() {
+		return fieldUpdater;
+	}
 
-    @Override
-    public V getValue( P parent )
-    {
-        return valueGetter.getValue( childGetter.getChild( parent, childIndex ) );
-    }
+	@Override
+	public V getValue(P parent) {
+		return valueGetter.getValue(childGetter.getChild(parent, childIndex));
+	}
 
 }

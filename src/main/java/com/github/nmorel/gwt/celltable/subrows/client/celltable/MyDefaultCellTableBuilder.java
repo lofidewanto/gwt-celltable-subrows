@@ -31,116 +31,122 @@ import com.google.gwt.view.client.SelectionModel;
 
 /**
  * Default cell table builder that renders row values into a grid of columns.
- * 
+ *
  * @param <T> the data type of the rows.
  */
 public class MyDefaultCellTableBuilder<T> extends AbstractCellTableBuilder<T> {
 
-  protected final String evenRowStyle;
-  protected final String oddRowStyle;
-  protected final String selectedRowStyle;
-  protected final String cellStyle;
-  protected final String evenCellStyle;
-  protected final String oddCellStyle;
-  protected final String firstColumnStyle;
-  protected final String lastColumnStyle;
-  protected final String selectedCellStyle;
+	protected final String evenRowStyle;
+	protected final String oddRowStyle;
+	protected final String selectedRowStyle;
+	protected final String cellStyle;
+	protected final String evenCellStyle;
+	protected final String oddCellStyle;
+	protected final String firstColumnStyle;
+	protected final String lastColumnStyle;
+	protected final String selectedCellStyle;
 
-  public MyDefaultCellTableBuilder(AbstractCellTable<T> cellTable) {
-    super(cellTable);
+	public MyDefaultCellTableBuilder(AbstractCellTable<T> cellTable) {
+		super(cellTable);
 
-    // Cache styles for faster access.
-    Style style = cellTable.getResources().style();
-    evenRowStyle = style.evenRow();
-    oddRowStyle = style.oddRow();
-    selectedRowStyle = " " + style.selectedRow();
-    cellStyle = style.cell();
-    evenCellStyle = " " + style.evenRowCell();
-    oddCellStyle = " " + style.oddRowCell();
-    firstColumnStyle = " " + style.firstColumn();
-    lastColumnStyle = " " + style.lastColumn();
-    selectedCellStyle = " " + style.selectedRowCell();
-  }
+		// Cache styles for faster access.
+		Style style = cellTable.getResources().style();
+		evenRowStyle = style.evenRow();
+		oddRowStyle = style.oddRow();
+		selectedRowStyle = " " + style.selectedRow();
+		cellStyle = style.cell();
+		evenCellStyle = " " + style.evenRowCell();
+		oddCellStyle = " " + style.oddRowCell();
+		firstColumnStyle = " " + style.firstColumn();
+		lastColumnStyle = " " + style.lastColumn();
+		selectedCellStyle = " " + style.selectedRowCell();
+	}
 
-  @Override
-  public void buildRowImpl(T rowValue, int absRowIndex) {
-      buildDefaultRow(rowValue, absRowIndex);
-  }
+	@Override
+	public void buildRowImpl(T rowValue, int absRowIndex) {
+		buildDefaultRow(rowValue, absRowIndex);
+	}
 
-  protected void buildDefaultRow(T rowValue, int absRowIndex) {
-    // Calculate the row styles.
-    SelectionModel<? super T> selectionModel = cellTable.getSelectionModel();
-    boolean isSelected =
-        (selectionModel == null || rowValue == null) ? false : selectionModel.isSelected(rowValue);
-    boolean isEven = absRowIndex % 2 == 0;
-    StringBuilder trClasses = new StringBuilder(isEven ? evenRowStyle : oddRowStyle);
-    if (isSelected) {
-      trClasses.append(selectedRowStyle);
-    }
+	protected void buildDefaultRow(T rowValue, int absRowIndex) {
+		// Calculate the row styles.
+		SelectionModel<? super T> selectionModel = cellTable
+				.getSelectionModel();
+		boolean isSelected = (selectionModel == null || rowValue == null) ?
+				false :
+				selectionModel.isSelected(rowValue);
+		boolean isEven = absRowIndex % 2 == 0;
+		StringBuilder trClasses = new StringBuilder(
+				isEven ? evenRowStyle : oddRowStyle);
+		if (isSelected) {
+			trClasses.append(selectedRowStyle);
+		}
 
-    // Add custom row styles.
-    RowStyles<T> rowStyles = cellTable.getRowStyles();
-    if (rowStyles != null) {
-      String extraRowStyles = rowStyles.getStyleNames(rowValue, absRowIndex);
-      if (extraRowStyles != null) {
-        trClasses.append(" ").append(extraRowStyles);
-      }
-    }
+		// Add custom row styles.
+		RowStyles<T> rowStyles = cellTable.getRowStyles();
+		if (rowStyles != null) {
+			String extraRowStyles = rowStyles
+					.getStyleNames(rowValue, absRowIndex);
+			if (extraRowStyles != null) {
+				trClasses.append(" ").append(extraRowStyles);
+			}
+		}
 
-    // Build the row.
-    TableRowBuilder tr = startRow();
-    tr.className(trClasses.toString());
+		// Build the row.
+		TableRowBuilder tr = startRow();
+		tr.className(trClasses.toString());
 
-    // Build the columns.
-    int columnCount = cellTable.getColumnCount();
-    for (int curColumn = 0; curColumn < columnCount; curColumn++) {
-      Column<T, ?> column = cellTable.getColumn(curColumn);
-      // Create the cell styles.
-      StringBuilder tdClasses = new StringBuilder(cellStyle);
-      tdClasses.append(isEven ? evenCellStyle : oddCellStyle);
-      if (curColumn == 0) {
-        tdClasses.append(firstColumnStyle);
-      }
-      if (isSelected) {
-        tdClasses.append(selectedCellStyle);
-      }
-      // The first and last column could be the same column.
-      if (curColumn == columnCount - 1) {
-        tdClasses.append(lastColumnStyle);
-      }
+		// Build the columns.
+		int columnCount = cellTable.getColumnCount();
+		for (int curColumn = 0; curColumn < columnCount; curColumn++) {
+			Column<T, ?> column = cellTable.getColumn(curColumn);
+			// Create the cell styles.
+			StringBuilder tdClasses = new StringBuilder(cellStyle);
+			tdClasses.append(isEven ? evenCellStyle : oddCellStyle);
+			if (curColumn == 0) {
+				tdClasses.append(firstColumnStyle);
+			}
+			if (isSelected) {
+				tdClasses.append(selectedCellStyle);
+			}
+			// The first and last column could be the same column.
+			if (curColumn == columnCount - 1) {
+				tdClasses.append(lastColumnStyle);
+			}
 
-      // Add class names specific to the cell.
-      Context context = new Context(absRowIndex, curColumn, cellTable.getValueKey(rowValue));
-      String cellStyles = column.getCellStyleNames(context, rowValue);
-      if (cellStyles != null) {
-        tdClasses.append(" " + cellStyles);
-      }
+			// Add class names specific to the cell.
+			Context context = new Context(absRowIndex, curColumn,
+					cellTable.getValueKey(rowValue));
+			String cellStyles = column.getCellStyleNames(context, rowValue);
+			if (cellStyles != null) {
+				tdClasses.append(" " + cellStyles);
+			}
 
-      // Build the cell.
-      HorizontalAlignmentConstant hAlign = column.getHorizontalAlignment();
-      VerticalAlignmentConstant vAlign = column.getVerticalAlignment();
-      TableCellBuilder td = tr.startTD();
-      td.className(tdClasses.toString());
-      if (hAlign != null) {
-        td.align(hAlign.getTextAlignString());
-      }
-      if (vAlign != null) {
-        td.vAlign(vAlign.getVerticalAlignString());
-      }
+			// Build the cell.
+			HorizontalAlignmentConstant hAlign = column
+					.getHorizontalAlignment();
+			VerticalAlignmentConstant vAlign = column.getVerticalAlignment();
+			TableCellBuilder td = tr.startTD();
+			td.className(tdClasses.toString());
+			if (hAlign != null) {
+				td.align(hAlign.getTextAlignString());
+			}
+			if (vAlign != null) {
+				td.vAlign(vAlign.getVerticalAlignString());
+			}
 
-      // Add the inner div.
-      DivBuilder div = td.startDiv();
-      div.style().outlineStyle(OutlineStyle.NONE).endStyle();
+			// Add the inner div.
+			DivBuilder div = td.startDiv();
+			div.style().outlineStyle(OutlineStyle.NONE).endStyle();
 
-      // Render the cell into the div.
-      renderCell(div, context, column, rowValue);
+			// Render the cell into the div.
+			renderCell(div, context, column, rowValue);
 
-      // End the cell.
-      div.endDiv();
-      td.endTD();
-    }
+			// End the cell.
+			div.endDiv();
+			td.endTD();
+		}
 
-    // End the row.
-    tr.endTR();
-  }
+		// End the row.
+		tr.endTR();
+	}
 }

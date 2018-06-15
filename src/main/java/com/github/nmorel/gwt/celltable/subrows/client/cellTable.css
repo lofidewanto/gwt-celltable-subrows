@@ -1,17 +1,17 @@
 .dataGridHeader {
-  text-shadow: none;
+	text-shadow: none;
 }
 
 .dataGridCell {
-  padding: 1px 10px;
-  overflow: hidden;
-  height: 26px;
+	padding: 1px 10px;
+	overflow: hidden;
+	height: 26px;
 }
 
 .dataGridOddRow {
-  background: #D7DEE6;
+	background: #D7DEE6;
 }
 
 .dataGridOddRowCell {
-  border: selectionBorderWidth solid #D7DEE6;
+	border: selectionBorderWidth solid #D7DEE6;
 }
