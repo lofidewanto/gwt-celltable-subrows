@@ -1,10 +1,6 @@
 gwt-celltable-subrows
 ==============
 
-Example of editable subrows in GWT CellTable and DataGrid
+Example of editable subrows in GWT CellTable and DataGrid.
 
-To run the application in Dev Mode :
-    mvn gwt:run
-
-To run the compiled application :
-    mvn jetty:run-war
+This example is updated with GWT Boot: https://github.com/gwtboot/gwt-boot-samples
