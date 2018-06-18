@@ -1,4 +1,4 @@
-gwt-celltable-subrows
+DataGrid with Subrows: gwt-celltable-subrows
 ==============
 
 Example of editable subrows in GWT CellTable and DataGrid.
